@@ -16,7 +16,8 @@ class SubscriberHandler(MessagingHandler):
         :param send_message_callback: Function that sends an HTTP POST to the enrollment's target URL;
                                       must return an integer HTTP status code.
         """
-        super(SubscriberHandler, self).__init__()
+        # Disable auto_accept and auto_settle so that we control the message disposition explicitly.
+        super(SubscriberHandler, self).__init__(auto_accept=False, auto_settle=False)
         self.amqp_url = amqp_url
         self.enrollment = enrollment
         self.send_message_callback = send_message_callback
@@ -27,6 +28,7 @@ class SubscriberHandler(MessagingHandler):
         connection = event.container.connect(self.amqp_url)
         logger.info("Subscriber for client '%s': Creating receiver for queue: %s", 
                     self.enrollment["id"], self.enrollment["queue"])
+        # Create receiver normally; auto_settle is disabled by our constructor.
         event.container.create_receiver(connection, self.enrollment["queue"])
 
     def on_connection_opened(self, event):
@@ -49,17 +51,19 @@ class SubscriberHandler(MessagingHandler):
         try:
             status = self.send_message_callback(self.enrollment["target_url"], payload)
             if 200 <= status < 300:
-                event.delivery.update(event.delivery.ACCEPTED)
-                logger.info("Subscriber for client '%s': Message acknowledged (ACK).", 
+                # Explicitly accept the message
+                self.accept(event.delivery)
+                logger.info("Subscriber for client '%s': Message accepted (ACK).", 
                             self.enrollment["id"])
             else:
-                event.delivery.update(event.delivery.REJECTED)
+                # Explicitly reject the message
+                self.reject(event.delivery)
                 logger.info("Subscriber for client '%s': Message rejected (NACK) with status %s", 
                             self.enrollment["id"], status)
         except Exception as e:
             logger.error("Subscriber for client '%s': Error in send_message_callback: %s", 
                          self.enrollment["id"], e)
-            event.delivery.update(event.delivery.REJECTED)
+            self.reject(event.delivery)
 
 class SubscriberRunner:
     """
