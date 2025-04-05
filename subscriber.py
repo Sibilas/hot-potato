@@ -34,11 +34,23 @@ class SubscriberHandler(MessagingHandler):
     def on_connection_opened(self, event):
         logger.info("Subscriber for client '%s': Connection opened successfully.", 
                     self.enrollment["id"])
+    def on_rejected(self, event):
+        logger.debug("on_rejected: Message was rejected by remote peer. Delivery: %s", event.delivery)
+
+    def on_accepted(self, event):
+        logger.debug("on_accepted: Message was accepted by remote peer. Delivery: %s", event.delivery)
+    
+    def on_released(self, event):
+        logger.debug("on_released: Message was RELEASED by remote peer. Delivery: %s", event)
+
+    def on_settled(self, event):
+        logger.debug("on_settled: Message delivery settled. Delivery: %s", event.delivery)
 
     def on_message(self, event):
         message = event.message
         logger.info("Subscriber for client '%s': Received message: %s", 
                     self.enrollment["id"], message.body)
+        print(f"EVENT: {event}")
         try:
             payload = message.body
             if isinstance(payload, str):
@@ -57,13 +69,17 @@ class SubscriberHandler(MessagingHandler):
                             self.enrollment["id"])
             else:
                 # Explicitly reject the message
-                self.reject(event.delivery)
-                logger.info("Subscriber for client '%s': Message rejected (NACK) with status %s", 
+                # self.release(event.delivery, delivered=True)
+                # event.delivery.update(state=event.delivery.RELEASED)
+                self.release(event.delivery, delivered=True)
+                logger.info("Subscriber for client '%s': Message.RELEASED (NACK) with status %s", 
                             self.enrollment["id"], status)
         except Exception as e:
             logger.error("Subscriber for client '%s': Error in send_message_callback: %s", 
                          self.enrollment["id"], e)
-            self.reject(event.delivery)
+            # self.release(event.delivery, delivered=True)
+            event.delivery.update(state=event.delivery.RELEASED)
+            self.release(event.delivery, delivery=True)
 
 class SubscriberRunner:
     """
