@@ -25,7 +25,7 @@ def load_config() -> Config:
     """
     # Default configuration values.
     defaults = {
-        "AMQP_URL": "amqp://admin:admin@localhost:5672",
+        "AMQP_URL": "amqp://sibilas:sibilasserver2024@192.168.15.22:5672",
         "HTTP_PORT": "8080",
         "SQLITE_BACKUP_PATH": "hotpotato.sqlite",
         "LOG_LEVEL": "INFO"

@@ -1,13 +1,14 @@
 import json
 import logging
 import threading
-from proton.handlers import MessagingHandler
+from proton.handlers import MessagingHandler, TransactionHandler
 from proton.reactor import Container
+from proton import Disposition, Receiver
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-class SubscriberHandler(MessagingHandler):
+class SubscriberHandler(MessagingHandler, TransactionHandler):
     def __init__(self, amqp_url, enrollment, send_message_callback):
         """
         :param amqp_url: The AMQP URL for the ActiveMQ broker.
@@ -69,17 +70,24 @@ class SubscriberHandler(MessagingHandler):
                             self.enrollment["id"])
             else:
                 # Explicitly reject the message
-                # self.release(event.delivery, delivered=True)
-                # event.delivery.update(state=event.delivery.RELEASED)
+                local_state = event.delivery.local
+                local_state.failed = True
+                local_state.undeliverable = False
+                local_state.type = event.delivery.MODIFIED
+                event.delivery.update(local_state)
                 self.release(event.delivery, delivered=True)
                 logger.info("Subscriber for client '%s': Message.RELEASED (NACK) with status %s", 
                             self.enrollment["id"], status)
         except Exception as e:
             logger.error("Subscriber for client '%s': Error in send_message_callback: %s", 
                          self.enrollment["id"], e)
-            # self.release(event.delivery, delivered=True)
-            event.delivery.update(state=event.delivery.RELEASED)
-            self.release(event.delivery, delivery=True)
+            # Explicitly reject the message
+            local_state = event.delivery.local
+            local_state.failed = True
+            local_state.undeliverable = False
+            local_state.type = event.delivery.MODIFIED
+            event.delivery.update(local_state)
+            self.release(event.delivery, delivered=True)
 
 class SubscriberRunner:
     """
