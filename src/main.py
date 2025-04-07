@@ -4,11 +4,11 @@ import threading
 import requests
 from aiohttp import web
 
-from config import load_config
-from enroll import create_app
-from subscriptions import start_subscriber_for_enrollment  # New module for subscriber management
-from database import db_manager
-from callbacks import send_message_callback
+from src.config import load_config
+from src.enroll.enroll import create_app
+from src.consumerMQ.subscriptions import start_subscriber_for_enrollment  # New module for subscriber management
+from src.database.database import db_manager
+from src.callbacks import send_message_callback
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

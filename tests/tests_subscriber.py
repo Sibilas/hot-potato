@@ -1,6 +1,6 @@
 import json
 import pytest
-from subscriber import SubscriberHandler
+from src.consumerMQ.subscriber import SubscriberHandler
 
 sibimq_url = "amqp://192.168.15.22:5672"
 # Dummy classes to simulate Proton event, message, and delivery objects.

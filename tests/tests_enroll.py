@@ -2,8 +2,8 @@ import json
 import pytest
 from aiohttp.test_utils import TestClient
 
-from enroll import create_app
-from database import db_manager
+from src.enroll.enroll import create_app
+from src.database.database import db_manager
 
 # Fixture to clear the enrollments table before and after each test.
 @pytest.fixture(autouse=True)

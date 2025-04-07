@@ -7,7 +7,7 @@ import pytest
 from proton import Message
 from proton.reactor import Container
 from proton.handlers import MessagingHandler
-from subscriber import run_subscriber
+from src.consumerMQ.subscriber import run_subscriber
 
 # Configure logging for integration tests.
 logging.basicConfig(level=logging.INFO)

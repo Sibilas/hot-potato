@@ -1,5 +1,5 @@
 import logging
-from subscriber import SubscriberRunner
+from src.consumerMQ.subscriber import SubscriberRunner
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
