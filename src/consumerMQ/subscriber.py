@@ -73,9 +73,8 @@ class SubscriberHandler(MessagingHandler, TransactionHandler):
                 local_state = event.delivery.local
                 local_state.failed = True
                 local_state.undeliverable = False
-                local_state.type = event.delivery.MODIFIED
-                event.delivery.update(local_state)
-                self.release(event.delivery, delivered=True)
+                event.delivery.update(local_state.type)
+                self.settle(event.delivery, event.delivery.MODIFIED)
                 logger.info("Subscriber for client '%s': Message.RELEASED (NACK) with status %s", 
                             self.enrollment["id"], status)
         except Exception as e:
@@ -85,9 +84,8 @@ class SubscriberHandler(MessagingHandler, TransactionHandler):
             local_state = event.delivery.local
             local_state.failed = True
             local_state.undeliverable = False
-            local_state.type = event.delivery.MODIFIED
-            event.delivery.update(local_state)
-            self.release(event.delivery, delivered=True)
+            event.delivery.update(local_state.type)
+            self.settle(event.delivery, event.delivery.MODIFIED)
 
 class SubscriberRunner:
     """
