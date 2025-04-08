@@ -5,7 +5,7 @@ from aiohttp import web
 import requests
 
 # Import the functions to test from main.py.
-from main import send_message_callback, start_http_server, start_subscriber_for_enrollment
+from src.main import send_message_callback, start_http_server, start_subscriber_for_enrollment
 
 # A simple fake response class for simulating requests.post.
 class FakeResponse:
@@ -58,7 +58,7 @@ def dummy_run_subscriber(amqp_url, enrollment, send_message_callback):
 
 def test_start_subscriber_for_enrollment(monkeypatch):
     # Import main so we can monkey-patch run_subscriber and also override config.
-    import main
+    import src.main as main
 
     # Create a dummy config object with an AMQP_URL attribute.
     dummy_config = type("DummyConfig", (), {"AMQP_URL": "amqp://dummybroker:5672"})

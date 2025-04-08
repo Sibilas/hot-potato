@@ -2,9 +2,9 @@ import json
 import uuid
 import logging
 from aiohttp import web
-from database import db_manager
-from subscriptions import start_subscriber_for_enrollment
-from callbacks import send_message_callback
+from src.database.database import db_manager
+from src.consumerMQ.subscriptions import start_subscriber_for_enrollment
+from src.callbacks import send_message_callback
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -51,7 +51,7 @@ async def handle_enroll(request):
     logger.info("Enrollment created: %s", enrollment_id)
     
     # Start a new subscriber for this enrollment.
-    from config import load_config
+    from src.config import load_config
     config = load_config()
     start_subscriber_for_enrollment(config.AMQP_URL, enrollment, send_message_callback)
 
@@ -69,7 +69,7 @@ async def handle_delete_enrollment(request):
         return web.json_response({"error": "Failed to delete enrollment"}, status=500)
 
     logger.info("Enrollment deleted: %s", enrollment_id)
-    from subscriptions import stop_subscriber_for_enrollment
+    from src.consumerMQ.subscriptions import stop_subscriber_for_enrollment
     stop_subscriber_for_enrollment(enrollment_id)
     return web.json_response({"message": f"Enrollment {enrollment_id} deleted"}, status=200)
 

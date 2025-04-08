@@ -7,4 +7,4 @@ echo "Starting hot-potato service..."
 # python database.py --backup
 
 # Start the main application.
-exec python main.py
+exec python ./src/main.py
