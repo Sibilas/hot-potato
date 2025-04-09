@@ -1,0 +1,14 @@
+services:
+  hotpotato: 
+    container_name: hotpotato
+    build:
+      context: . # Specifies the directory containing your Dockerfile
+      dockerfile: Dockerfile # Specifies the name of your Dockerfile (if it's not the default)
+    ports:
+      - "8880:8080" # Map host port 8880 to container port 8080
+    networks:
+      - mqnet
+
+networks:
+  mqnet:
+    external: true
