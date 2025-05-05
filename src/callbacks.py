@@ -10,7 +10,7 @@ def send_message_callback(target_url, payload):
     Returns the HTTP status code.
     """
     try:
-        response = requests.post(target_url, json=payload, timeout=5)
+        response = requests.post(target_url, json=payload, timeout=300)
         logger.info("HTTP POST to %s returned status %s", target_url, response.status_code)
         return response.status_code
     except Exception as e:
