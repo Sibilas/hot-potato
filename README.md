@@ -1,4 +1,4 @@
-# 🥔 Hot-Potato
+# 🥔 Hot-Potato test
 
 **Hot-Potato** is a lightweight and resilient message dispatching service that listens to an AMQP 1.0 message broker (like ActiveMQ Artemis), receives messages from queues (addresses), and **forwards** them to HTTP services (clients) based on dynamic runtime enrollment.
 
