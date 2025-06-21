@@ -8,9 +8,12 @@ services:
       - "8880:8080" # Map host port 8880 to container port 8080
     networks:
       - mqnet
+      - sibilas_net
     volumes:
       - ./hotpotato.sqlite:/app/hotpotato.sqlite
 
 networks:
   mqnet:
+    external: true
+  sibilas_net:
     external: true
