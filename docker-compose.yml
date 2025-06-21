@@ -10,7 +10,7 @@ services:
       - mqnet
       - sibilas_net
     volumes:
-      - ./hotpotato.sqlite:/app/hotpotato.sqlite
+      - /home/sibila-server/hotpotato/data:/app/data
 
 networks:
   mqnet:
