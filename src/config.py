@@ -48,7 +48,8 @@ def load_config() -> Config:
     # For each configuration key, check: env var > file config > default.
     amqp_url = os.getenv("AMQP_URL", file_config.get("AMQP_URL", defaults["AMQP_URL"]))
     http_port = int(os.getenv("HTTP_PORT", file_config.get("HTTP_PORT", defaults["HTTP_PORT"])))
-    sqlite_backup_path = os.getenv("SQLITE_BACKUP_PATH", file_config.get("SQLITE_BACKUP_PATH", defaults["SQLITE_BACKUP_PATH"]))
+    #sqlite_backup_path = os.getenv("SQLITE_BACKUP_PATH", file_config.get("SQLITE_BACKUP_PATH", defaults["SQLITE_BACKUP_PATH"]))
+    os.environ["SQLITE_BACKUP_PATH"] = defaults["SQLITE_BACKUP_PATH"]
     log_level = os.getenv("LOG_LEVEL", file_config.get("LOG_LEVEL", defaults["LOG_LEVEL"]))
 
     return Config(amqp_url, http_port, sqlite_backup_path, log_level)
