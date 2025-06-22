@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-SQLITE_BACKUP_PATH = os.environ.get("SQLITE_BACKUP_PATH", "../data/hotpotato.sqlite")
+SQLITE_BACKUP_PATH = os.environ.get("SQLITE_BACKUP_PATH", "app/data/hotpotato.sqlite")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS enrollments (
