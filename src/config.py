@@ -52,4 +52,4 @@ def load_config() -> Config:
     os.environ["SQLITE_BACKUP_PATH"] = defaults["SQLITE_BACKUP_PATH"]
     log_level = os.getenv("LOG_LEVEL", file_config.get("LOG_LEVEL", defaults["LOG_LEVEL"]))
 
-    return Config(amqp_url, http_port, sqlite_backup_path, log_level)
+    return Config(amqp_url, http_port, defaults["SQLITE_BACKUP_PATH"], log_level)
